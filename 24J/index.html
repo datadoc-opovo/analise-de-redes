@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Data.doc/OPovo - Monitorando a #24JForaBolsonaro </title>
+	<meta charset="UTF-8"> 
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.1/dc.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter2/1.4.0-alpha.6/crossfilter.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.1/dc.js"></script>
+	
+   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<link rel="icon" href="https://yt3.ggpht.com/ytc/AAUvwniBqGmJubYSj-rjkhRMVK9svDC9HCDkzmAhL7JqATo=s900-c-k-c0x00ffffff-no-rj">
+
+	<style>
+		/* style="zmax-width: 1100px; font-size: 14px;" */
+		p{
+			font-family: var(--noto);
+    		font-weight: 400;
+		    font-size: 21px;
+			color: #333;
+			line-height: 32px;
+			margin-top: 0;
+			margin-bottom: 20px;
+			word-break: break-word;
+		}
+		h3{
+			margin-left: 5%;
+			font-weight: bold;
+		}
+		label{
+			margin-left: 3%;
+		}
+		.dc-html-legend{
+			margin-left: 3%;
+		}
+		.dc-legend-item-color{
+			height: 35px;
+			width: 35px;
+		}
+		.dc-legend-item-label{
+			fill: black;
+			font: 16px/18px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+		.dc-chart g.axis text{
+			fill: black;
+			font: 14px/18px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+		
+		.dc-chart g.row text {
+			fill: black;
+			font-family: var(--noto);
+			font-size: 16px;
+			font-weight: bold;
+		}
+		.dc-chart g.dc-legend-item text{
+			fill: black;
+			font: 14px/14px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+
+	</style>
+
+</head>
+<body>
+	<div class="container">
+		<h1>Como as manifestações contra o Governo ocuparam o Twitter?</h1>
+		<p>O dataDoc recuperou tweets relacionados à hashtag <b>#24JForaBolsonaro</b> na última semana. Confira:</p>
+	<hr>
+	<p>
+		Verificamos cerca de 240 mil tweets ao longo da semana. Com um pico no sábado à noite, com cerca de 16 mil tweets por hora.
+		Em nossa análise anterior (dos atos do dia 03 de julho), computamos cerca 340 mil tweets no mesmo período de tempo, o que representa uma redução de 29% em postagens na rede.
+		Uma análise comparativa pode ser observada <a href="comp.html">aqui</a>. 
+	</p>
+	<p>
+		Foi possível observar que o termo <a onclick="buscaTermo('corrupto')"><b>"Corrupto"</b></a>, que apareceu mais de 50 mil vezes durante a semana dos atos de 3 de Julho,
+		continua sendo ventilado - com cerca de 20 mil menções - mas perdeu força, possivelmente em função do recesso parlamentar que interrompeu os trabalhos da CPI da Covid. 
+		As menções ao perfil do presidente da Câmara dos Deputados <a onclick="buscaTermo('arthurlira')"><b>Arthur Lira</b></a> e outros parlamentares da CPI também caíram drasticamente.
+	</p> 
+	<p>
+		Ao observar os perfis mais citados na rede - que também tiveram mais engajamento em torno de suas postagens - é possível perceber que não há  enfrentamento - ou mesmo qualquer participação expressiva - de atores da direita e do centro político no debate. Ou seja, podemos pensar que há um Silenciamento - por parte dos apoiadores do presidente e um Isolamento, por parte de outras parcelas da oposição.   
+		<br>Para ilustrar, enquanto o termo <a onclick="buscaTermo('pt')"><b>"PT"</b></a> apareceu 68 mil vezes, o somatório de menções ao <b>PDT</b>, <b>PSB</b> e <b>PCdoB</b> foi de apenas 1,7 mil. 
+	</p>
+
+	<hr>
+	<h4 style="margin-left: 3%; margin-top: 100px;">
+		Filtrar tweets por frase ou palavra-chave: 
+		<input type="text" id="busca" value="Corrupto" style="margin-bottom: 10px;">
+		<button class="btn" onclick="busca()">Filtrar</button>
+		<button  class="btn"  onclick="limpar()">Limpar seleção</button>
+	</h4>
+
+	<hr>
+    <div id='time-chart'><h3>Nº tweets por hora</h3></div>
+
+	<hr>
+	<br>
+	<div id='topics-array-rows'><h3>&nbsp; Usuários mais citados</h3></div>
+	<div id='ht-array-rows'><h3>&nbsp; Principais Hashtags</h3></div>
+	<label style="min-width: 500px;">Fonte: Levantamento do Data.doc com base nos dados do Twitter</label>
+
+	<!-- <hr>
+	<table class="table table-hover" id="table" style="margin-top: 100px;">
+		<thead>
+			<tr class="header">
+				<th>Tweet_id</th>
+				<th>@</th>
+				<th>Tweet</th>
+				<th>Date</th>
+			</tr>
+		</thead>
+	</table>
+	</div>
+-->
+	<div style="width: 40%; margin-left: 20%; margin-bottom: 20px;"><h3>Destaque aos perfis com mais Retweets</h3></div>
+	<div id="observablehq-chart-51993d8f"style="width: 45%; margin-left: 27%;"> 
+	
+	</div>
+	<label style="min-width: 500px; margin-left: 20%;">Fonte: Levantamento do Data.doc com base nos dados do Twitter</label>
+	
+	<script type="module">
+	import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+	import define from "https://api.observablehq.com/@alexandrecajamos/midia-ninja-e-parlamentares-de-esquerda-sao-os-protagonist/2.js?v=3";
+	new Runtime().module(define, name => {
+	if (name === "chart") return new Inspector(document.querySelector("#observablehq-chart-51993d8f"));
+	});
+	</script>
+
+<script type="text/javascript">   
+	var txt = '';
+	var tweetDimention;
+	var htArrayRowChart;
+	
+	function limpar(){
+		// tweetDimention.filterAll();
+		// htDim.filterAll();
+		dc.filterAll();
+		dc.renderAll();
+	}
+	
+	function filtroHT(hashtag){
+		dc.filterAll();
+
+		htDim.filterFunction(function(d){
+			if(d == hashtag)
+				return true;
+			return false;
+		});
+		dc.renderAll();
+	}
+
+	function busca(){
+		dc.filterAll();
+
+		var termo = document.getElementById("busca").value.toLowerCase();
+		var verify = new RegExp(termo, 'g');
+		texto = txt.toLowerCase();
+		var total = (texto.match(verify) || []).length;
+		// document.getElementById("buscaResult").innerHTML = "Nº: " +total;
+		console.log(total);
+		
+		tweetDimention.filterFunction(function(d){
+			var texto = '';
+			texto += d;
+			texto = texto.toLowerCase();
+			var total = (texto.match(verify) || []).length;
+			if(total>0)
+				return true;
+			return false;
+		});
+		dc.renderAll();
+	}
+
+	function buscaTermo(termo){
+		var verify = new RegExp(termo, 'g');
+		texto = txt.toLowerCase();
+		var total = (texto.match(verify) || []).length;
+		// document.getElementById("buscaResult").innerHTML = "Nº: " +total;
+		console.log(total);
+		
+		tweetDimention.filterFunction(function(d){
+			var texto = '';
+			texto += d;
+			texto = texto.toLowerCase();
+			var total = (texto.match(verify) || []).length;
+			if(total>0)
+				return true;
+			return false;
+		});
+		dc.renderAll();
+	}
+    timeChart = dc.lineChart("#time-chart")
+	dataTable = dc.dataTable("#table");
+	
+	let parseDate = d3.time.format('%Y-%m-%d %H:%M:%S');
+	d3.csv("data/FullDF24J2.csv", function(data){
+        // var dtgFormat = d3.utcParse("%Y");
+		var cont = 0;
+		data.forEach(function(d) {
+
+            d.id = d.id_str;
+            d.user = d.from_user;
+            d.dtg = parseDate.parse(d.formated_date.substr(0,19));
+			d.text = d.text; 
+			// d.users = d.users.slice(1,-1);
+			a = d.users.replace(/'/g, '"');
+			d.users = JSON.parse(a);
+			txt += d.text;
+			
+			a = d.hashtags.replace(/'/g, '"');
+			d.hashtags = JSON.parse(a);
+            // console.log(cont);
+            if(cont < 5){
+                console.log(cont);
+                console.log(d.formated_date.substr(0,19));
+                
+            }			
+			cont++;
+        });
+		console.log(cont);
+		
+		facts = crossfilter(data);
+		tweetDimention = facts.dimension(function(d){return d.text;});
+
+        hourDimension = facts.dimension(d => d3.time.hour(d.dtg))
+
+        hourDimensionCount = hourDimension.group()
+
+		usersDim = facts.dimension(function(d){ return d.users;}, true);
+		usersGroup = usersDim.group();
+
+
+		htDim = facts.dimension(function(d){ return d.hashtags;}, true);
+		htGroup = htDim.group();
+
+		
+		
+		topicsArrayRowChart = dc.rowChart("#topics-array-rows")
+    	    // .renderLabel(true)
+
+			.margins({top: 10, right: 30, bottom: 50, left:50})
+    	    .height(450)
+            .width(450)
+    	    .dimension(usersDim)
+    	    .group(usersGroup)
+    	    .cap(10)
+			.label(function(d){
+				return '@'+d.key;
+			})
+			.title(function(d){
+					return ''+ d.value.toLocaleString("pt-BR")+' menções';
+				})
+			.renderLabel(true)
+			.renderTitleLabel(true)
+			.othersGrouper(false)
+    	    .ordering(function(d){return -d.value;})
+    	    .xAxis().ticks(3);
+	
+		htArrayRowChart = dc.rowChart("#ht-array-rows")
+
+		.margins({top: 10, right: 30, bottom: 50, left:50})
+    	    .height(450)
+            .width(450)
+    	    .dimension(htDim)
+    	    .group(htGroup)
+			.label(function(d){
+				return '#'+d.key;
+			})
+
+			.title(function(d){
+					return ''+ d.value.toLocaleString("pt-BR")+' tweets';
+				})
+			.renderLabel(true)
+			.renderTitleLabel(true)
+    	    .cap(10)
+			.othersGrouper(false)
+    	    .ordering(function(d){return -d.value;})
+    	    .xAxis().ticks(3);
+			// '%Y-%m-%d %H:%M:%S'
+
+
+        timeChart
+            .width(900)
+           .height(300)
+           .transitionDuration(500)
+           .margins({top: 10, right: 30, bottom: 50, left:80})
+           .dimension(hourDimension)
+           .group(hourDimensionCount)
+		   .renderHorizontalGridLines(true)
+			.renderVerticalGridLines(true)
+           .brushOn(false)
+           .elasticY(true)
+		//    .renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.0})
+
+           .x(d3.time.scale().domain(d3.extent(data, function(d) { return d.dtg; })));
+
+		   dataAtual =  parseDate.parse('2021-07-26 00:00:00');
+			let minDate = d3.time.day.offset(dataAtual, -9),
+			maxDate = dataAtual;
+			timeChart.x(d3.time.scale().domain([minDate, maxDate]));
+			
+			format = d3.time.format("%d/%m")	
+			
+			timeChart.xAxis()
+			// .ticks(d3.time.days, 2)
+			.tickFormat(function (d) {
+				// console.log(d);
+				return format(d);
+			});
+		
+			dataTable
+				.width(960)
+			    .height(800)
+			    .dimension(tweetDimention)
+			    .group(function(d) {
+			        return "Tebalea de dados";
+			    })
+			    .size(20)
+			    .columns([
+						function(d) { return d.id; },
+			            function(d) { return d.user; },                    
+			            function (d) { return d.text; },                
+			            function (d) { return d.dtg; },			
+						
+					])
+			    // .sortBy(function(d) { return -d.nlikes; })
+			    // .order(d3.ascending);
+		
+		
+		
+		
+			
+        dc.renderAll()
+    });
+
+</script>
+
+
+ <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+ <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <!-- Latest compiled and minified JavaScript -->
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+</body>
+</html>
