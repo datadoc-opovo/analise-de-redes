@@ -51,7 +51,7 @@
 		
 		.dc-chart g.row text {
 			fill: black;
-			font-family: var(--noto);
+			font-family: vivita;
 			font-size: 16px;
 			font-weight: bold;
 		}
@@ -114,7 +114,7 @@
 	</table>
 	</div>
 -->
-	<div style="width: 40%; margin-left: 20%; margin-bottom: 20px;"><h3>Destaque aos perfis com mais Retweets</h3></div>
+	<!-- <div style="width: 40%; margin-left: 20%; margin-bottom: 20px;"><h3>Destaque aos perfis com mais Retweets</h3></div>
 	<div id="observablehq-chart-51993d8f"style="width: 45%; margin-left: 27%;"> 
 	
 	</div>
@@ -126,12 +126,15 @@
 	new Runtime().module(define, name => {
 	if (name === "chart") return new Inspector(document.querySelector("#observablehq-chart-51993d8f"));
 	});
-	</script>
+	</script> -->
 
 <script type="text/javascript">   
 	var txt = '';
 	var tweetDimention;
 	var htArrayRowChart;
+
+	colors = d3.scale.ordinal()
+    .range(["#74CEE2", "#3A74BA", "#0052A4", "#4F3996", "#8250A0", "#ED1E81", "#D71440","#F7941D","#FDB913","#FFDD00"])
 	
 	function limpar(){
 		// tweetDimention.filterAll();
@@ -252,6 +255,7 @@
 			.title(function(d){
 					return ''+ d.value.toLocaleString("pt-BR")+' menções';
 				})
+				.colors(colors)
 			.renderLabel(true)
 			.renderTitleLabel(true)
 			.othersGrouper(false)
@@ -275,6 +279,7 @@
 			.renderLabel(true)
 			.renderTitleLabel(true)
     	    .cap(10)
+			
 			.othersGrouper(false)
     	    .ordering(function(d){return -d.value;})
     	    .xAxis().ticks(3);
@@ -290,7 +295,7 @@
            .group(hourDimensionCount)
 		   .renderHorizontalGridLines(true)
 			.renderVerticalGridLines(true)
-           .brushOn(false)
+           .brushOn(true)
            .elasticY(true)
 		//    .renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.0})
 

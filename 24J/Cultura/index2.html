@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Data.doc/OPovo - Para onde foi o orçamento da Cultura nos últimos 20 anos? 	</title>
+	<meta charset="UTF-8"> 
+	<link rel="stylesheet" href="css/dc.css">
+	<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+   <script src="js/crossfilter.js" charset="utf-8"></script>
+   <script src="js/dc.js" charset="utf-8"></script>
+
+   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<link rel="icon" href="https://yt3.ggpht.com/ytc/AAUvwniBqGmJubYSj-rjkhRMVK9svDC9HCDkzmAhL7JqATo=s900-c-k-c0x00ffffff-no-rj">
+
+	<style>
+		/* style="max-width: 1100px; font-size: 14px;" */
+		p{
+			font-family: var(--noto);
+    		font-weight: 400;
+		    font-size: 21px;
+			color: #333;
+			line-height: 32px;
+			margin-top: 0;
+			margin-bottom: 20px;
+			word-break: break-word;
+		}
+		h3{
+			margin-left: 3%;
+			font-weight: bold;
+		}
+		label{
+			margin-left: 3%;
+		}
+		.dc-chart g.axis text{
+			fill: black;
+			font: 14px/18px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+		
+		.dc-chart g.row text {
+			fill: black;
+			font-family: var(--noto);
+			font-size: 16px;
+			font-weight: bold;
+		}
+		.dc-chart g.dc-legend-item text{
+			fill: black;
+			font: 14px/14px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+
+	</style>
+
+</head>
+<body>
+
+	<div id="chart1">
+		<h3>Valores totais do Orçamento e sua Execução entre 2000 e 2021</h3>
+	</div>
+	<label>Fonte: Levantamento do Data.doc com base nos dados do Siop</label>
+
+
+<script type="text/javascript">   
+
+	chart1 = new dc.barChart("#chart1");
+	   
+	var facts, ano_dimension;
+	var executado_group, orcamento_group;
+
+	list_of_colorsv0 = ['#fc8d62', '#66c2a5'];
+
+		
+	d3.csv("data/dadosSIOPtratados.csv", function(data){
+        var dtgFormat = d3.time.format.utc("%Y");
+		data.forEach(function(d) {
+            d.ano = parseInt(d.Ano);
+			d.liquidado = parseFloat(d.Liquidado);
+			d.dotAtual = parseFloat(d.Dotação_Atual);
+        });
+		
+		facts = crossfilter(data);
+		ano_dimension = facts.dimension(function(d){return d.ano;});
+		executado_group = ano_dimension.group()
+			.reduceSum(function(d){
+				return d.liquidado;});
+		
+		orcamento_group = ano_dimension.group()
+			.reduceSum(function(d){
+				return d.dotAtual;});
+
+
+		var max_width = 600;
+		if (document.body.clientWidth > 500)
+			max_width = document.body.clientWidth;
+		// if(max_width<400)
+			// max_width=800; 
+		
+		console.log(document.body.clientWidth);
+		console.log(document.width);
+		console.log(max_width);
+		// max_width=500;
+
+		chart1
+			.width(max_width)
+			.height(500)
+			.dimension(ano_dimension)
+			.alwaysUseRounding(true)       
+			.legend(dc.legend().x(110).y(40).itemHeight(20).gap(3))
+			.x(d3.scale.ordinal().domain(ano_dimension)) 
+			.xUnits(dc.units.ordinal)
+			.margins({left: 80, top: 20, right: 80, bottom: 40})
+			.elasticY(true)
+			.title(function (d) {
+				if(d.key == 2000)
+					return 'As variações são calculadas a partir de 2001';
+				else{
+					key_ant = d.key-1;
+					key_0 = 2000;
+					variacao = 0;
+					ant = 0;
+					if(this.layer == "Executado"){
+						variacao = executado_group.all().filter(function(item) { return item.key === key_0; })[0].value;
+						ant = executado_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+					}else{
+						variacao = orcamento_group.all().filter(function(item) { return item.key === key_0; })[0].value;
+						ant = orcamento_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+					}								
+					value =  Math.round((d.value/ant-1)*100);
+					variacao =  Math.round((d.value/variacao-1)*100);
+					return ''+ this.layer +' em '+d.key+': '+ 'R$  '+ d.value.toLocaleString("pt-BR")+',00' +'\n'+
+					'- O montante representa '+ variacao +'% do valor em 2000;\n'+
+					'- A variação em relação ao ano anterior foi de  '+ value +'%.';;
+				}})
+			.colors(d3.scale.ordinal().range(list_of_colorsv0))
+			.renderHorizontalGridLines(true)
+			.renderVerticalGridLines(true)
+			.elasticY(true)
+			.renderType('group')
+			.group(orcamento_group, "Orçamento")	
+			.stack(executado_group, "Executado")
+		
+			.on('renderlet', function (chart) {
+				var txt = chart.selectAll('g.x text')
+					.attr('transform', 'translate(-15,10) rotate(-35)')});	
+		
+		var format = d3.format("s");
+		chart1.yAxis()
+	    	.tickFormat(function(d){
+	    		return 'R$ ' + format(d)
+				.replace(/G/," bi ")
+				.replace(/M/," mi ")
+				.replace(/k/," mil ");
+		    	// return d.toLocaleString("pt-BR");
+		    });
+
+		dc.renderAll();
+		
+	});			
+	
+
+</script>
+
+
+ <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+ <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <!-- Latest compiled and minified JavaScript -->
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+</body>
+</html>

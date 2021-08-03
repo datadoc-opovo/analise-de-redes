@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Data.doc/OPovo - Explorando Dados da Cultura</title>
+	<meta charset="UTF-8"> 
+	<link rel="stylesheet" href="css/dc.css">
+	<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+   <script src="js/crossfilter.js" charset="utf-8"></script>
+   <script src="js/dc.js" charset="utf-8"></script>
+
+   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<link rel="icon" href="https://yt3.ggpht.com/ytc/AAUvwniBqGmJubYSj-rjkhRMVK9svDC9HCDkzmAhL7JqATo=s900-c-k-c0x00ffffff-no-rj">
+
+	<style>
+		/* style="max-width: 1100px; font-size: 14px;" */
+		p{
+			width: 90%;
+			margin-left: 2%;
+			font-size: 16px;
+		}
+		.container{
+			width: 90%;
+			margin-left: 5%;
+			margin-top: 20px;
+		}
+
+	</style>
+
+
+
+</head>
+<body>
+
+<div class="container" id="target">
+	
+	<h1> Explorando Dados da Cultura (Data.doc / OPovo)</h1>
+	<br>
+	<h3>O conjunto de dados</h3>	
+	<p class="text-justify" >
+		Para analisar gastos do Governo Federal relacionados à cultura, buscamos dados por sua <a target="_blank" href="http://www.portaltransparencia.gov.br/pagina-interna/603317-funcao-e-subfuncao">Classificação Funcional da Despesa</a>, especificamente a <b>Função "13 - Cultura"</b>. 
+		Com esta abordagem, foi possível visualizar o conjunto de despesas federais associadas à cultura ao longo do tempo, independente da pasta específica onde os recursos foram alocados em cada governo.
+		Os dados foram retirados do <a target="_blank" href="https://www1.siop.planejamento.gov.br/QvAJAXZfc/opendoc.htm?document=IAS%2FExecucao_Orcamentaria.qvw&host=QVS%40pqlk04&anonymous=true">Painel do Orçamento</a>, do Sistema Integrado de Planejamento e Orçamento - SIOP, em 10 de junho de 2021.
+		
+	</p>
+
+	<p class="text-justify">
+		Tendo como foco de análise a distribuição de recursos da cultura em diferentes segmentos, exploramos as dimensões <b>Subfunção</b>, <b>Unidade Orçamentária</b> e <b>Modalidade de Aplicação</b>, 
+		suas respectivas séries temporais (entre 2000 e 2021) e respectivos valores <b>Empenhados</b>, <b>Liquidados e Pagos</b>.
+	
+	</p>
+	<p class="text-justify">
+		As variáveis descritas acima tiveram destaque em análises iniciais e foram selecionadas para visualização, todavia o conjunto de dados compreende também a distribuição das despesas por: 
+		Órgão Orçamentário, Unidade Orçamentária, Programa, Ação, Localizador, Plano Orçamentário, Grupo de Despesa, Natureza de Despesa, Resultado Primário,
+		Fonte, Objetivo, Número de Projetos de Lei, Dotação Inicial, Dotação Atual. 
+		
+	</p>
+	<p>
+		Para acessar um arquivo .csv com o conjunto de dados explorado, <a target="_blank" href="data/dadosSIOPtratados.csv">clique aqui</a>.      
+	</p>
+
+	<!-- Gráficos -->
+
+	<h3>Montante Empenhado, Liquidado e Pago para a Função Cultura entre 2000 e 2021</h3>
+	<p class="text-justify">
+		O gráfico abaixo agrupa os gastos gerais pagos, liquidados e empenhados do governo federal com cultura, demonstrando a evolução temporal global entre 2000 e 2021. É importante lembrar que os dados de 2021 são restritos à data de coleta dos dados. Para destacar os valores, clique ou passe o mouse sobre a legenda do gráfico.    
+	</p>
+	<p class="text-justify">
+		Todos os gráficos apresentados nesta página estão inter-relacionados com filtros interativos.
+		Logo, é possível visualizar no gráfico abaixo a série temporal de valores de uma ou mais Unidades Orçamentárias, Subfunções ou Modalidades de Aplicação específicas interagindo com os demais gráficos. 
+		De maneira similar, ao clicar em uma ou mais barras deste gráfico atualizamos o período de tempo compreendido pelos gráficos subsequentes.      
+	</p>
+	
+	<div id="chart1"></div>
+
+	<h3>Qual a variação (%) dos valores ao longo do tempo? </h3>
+	<p class="text-justify">Gráficos temporários - Sem edição.
+
+		Importante: Os dados plotados no gráfico representam a variação em relação ao primeiro valor (ano de 2000). Assim a variação ao longo do tempo faz mais sentido. Se você quiser saber a variação em relação ao ano anterior, passe o mouse sobre os pontos em cada linha. Não coloquei todos os dados (Liquidado e Dotação inicial) pra não aparecer tanta sobreposição. Se for importante, troco rapidinho os valores apresentados.  
+
+	</p>
+	<p>
+		Aqui podemos observar que durante o "platô" dos valores pagos, entre 2012 e 2018, a dotação Atual teve tendência de querda. Isso pode reforçar a tese de que havia pouca demanda pra aumentar o orçamento.
+
+	</p>
+	<div id="chart13"></div>
+
+	<h3>Quanto (%) da Dotação Atual foi empenhado, liquidado e pago por ano? </h3>
+	<p class="text-justify">Gráficos temporários - Sem edição.</p>
+	<div id="chart12"></div>
+
+	
+	<h3>Distribuição de recursos <b>executados</b> por Unidade Orçamentária ao longo do tempo</h3>
+	<p class="text-justify">
+		Neste gráfico é possível visualizar a distribuição dos valores pagos por Unidade Orçamentária em cada ano do período em análise, passando o mouse sobre a legenda do gráfico é possível destacar a evolução de uma unidade.
+		Agrupamos o conjunto de unidades orçamentárias em 10 categorias, conforme descrevemos <a target="_blank" href="https://docs.google.com/document/d/1_PQSRTNnhnrBWxiFXKLHsFav29ByTYzWE4wypA3wDRo/edit?usp=sharing">neste documento</a>.
+
+	</p>
+
+	<p class="text-justify">
+		É possível visualizar e comparar um conjunto restrito de unidades clicando nas barras do gráfico seguinte.
+		Por exemplo, ao selecionar "Administração Direta" no próximo gráfico, podemos observar aqui uma queda drástica de valores pagos a partir de 2019 (-86% em relação à 2018).    
+	</p>	
+	
+	<div id="chart2"></div>	
+	
+	<h3>Distribuição geral de recursos <b>executados</b> por Unidade Orçamentária</h3>
+	<p class="text-justify">
+		Neste gráfico o conjunto completo de valores pagos por Unidade Orçamentária (para o período de tempo em análise) foi somado e ranqueado. 
+		Deste modo é possível visualizar a parcela global de cada Unidade Orçamentária ao longo do tempo. 
+	</p>
+	<p class="text-justify">
+		Para exemplificar, pode-se observar que enquanto o Fundo Nacional de Cultura obteve a maior parcela de recursos no segundo governo Lula, esta Unidade Orçamentária caiu para a 7ª posição no governo Dilma. 
+		Para isto, selecione no gráfico anterior o período de 2007-2010 e, depois, 2011-2014. 
+		Para analisar a distribuição completa de valores do Fundo Nacional de Cultura, ou compará-lo com outra unidade, 
+		clique na respectiva barra horizontal deste gráfico e olhe para os gráficos anteriores. 
+	</p>
+	
+	<div id="chart3"></div>
+
+	<h3>Distribuição de recursos <b>executados</b> por Subfunção ao longo do tempo</h3>
+	<p class="text-justify">
+		Neste gráfico é possível visualizar a distribuição dos valores pagos para as principais Subfunções em cada ano do período em análise, de maneira similar ao explorado pela Unidade Orçamentária. 
+		Para verificar valores ou destacar subfunções, clique ou deixe o mouse sobre a respectiva legenda ou barra vertical do gráfico. 
+	</p>
+	<p class="text-justify">
+		É possível observar neste gráfico que a subfunção Administração Geral predomina os valores pagos da função Cultura, compreendendo a maior parcela do orçamento em todos os anos desta série histórica, com exceção de 2003. 
+		E, com exceção de 2010, é expressiva a diferença entre a parcela de recursos para Administração Geral e outras subfunções, inclusive para Difusão Cultural, que geralmente recebe a segunda maior parcela dos recursos.
+	</p>
+
+	<div id="chart4"></div>
+	
+	<h3>Distribuição geral de recursos <b>pagos</b> por Subfunção</h3>
+	<p class="text-justify">
+		Neste gráfico o conjunto completo de valores pagos por subfunção (para o período de tempo em análise) foi somado e ranqueado. 
+		Deste modo é possível visualizar a parcela global de cada subfunção ao longo do tempo. O período de tempo pode ser reduzido com a interação dos gráficos anteriores.  
+	</p>
+	
+	<p class="text-justify">
+		Ao selecionar uma ou mais barras horizontais deste gráfico é possível visualizar a evolução temporal de um conjunto restrito de subfunções no gráfico anterior. 
+		Pode-se observar, por exemplo, que os valores pagos para Proteção e Benefícios ao Trabalhador mudaram de patamar em 2014, quando saltou de 3.2 para 20.5 milhões em despesas pagas (+525%), aproximadamente.  
+	</p>
+
+	<p class="text-justify">
+		Ao selecionar a subfunção Administração Geral neste gráfico e olhar para o gráfico anterior, pode-se observar que em 2017 houve a interrupção de uma série de crescimento dos valores pagos para esta subfunção (há uma evolução positiva entre 2004 e 2016), iniciando uma tendência de queda que seguiu até o fim desta série (2021). 
+				     
+	</p>
+	<p class="text-justify">
+		Mantendo esta seleção e olhando para o <a href="#chart2">segundo gráfico</a> da página, podemos observar que a redução de recursos para esta subfunção acompanha a redução de valores da Unidade Orçamentária "Administração Direta".
+		Em seguida, acrescentando o filtro por Unidade Orçamentária (selecionando a "Administração Direta" no <a href="#chart2">terceiro gráfico</a>), podemos observar que não há, a partir de 2019, valores pagos para a subfunção <b>Administração Geral</b>, na Unidade Orçamentária <b>Administração Direta</b>. Com o início do governo Bolsonaro, a Cultura perdeu status de ministério.
+	</p>
+	<p class="text-justify">
+		Mantendo apenas o filtro por subfunção (ou seja, removendo a seleção no <a href="#chart2">terceiro gráfico</a>),
+		pode-se observar que com a extinção do ministério os gastos não foram alocados em sua totalidade para outras Unidades Orçamentárias. 
+		Enquanto em 2018 os valores pagos com a "Administração Geral" associados à função Cultura somaram 583 milhões de reais, em 2019 os valores somaram 448 milhões (-23%, aproximadamente). A tendência de redução seguiu em 2020 (421 milhões). 
+	</p>
+	<div id="chart5"></div>
+
+	
+	<h3>Distribuição de recursos <b>pagos</b> por Modalidade de Aplicação</h3>
+	<p class="text-justify">
+		Por fim, apresentamos a distribuição geral de recursos por Modalidade de Aplicação. 
+		Como a distribuição anual destes recursos aconteceu de maneira uniforme, apenas um gráfico para esta dimensão é apresentado nesta página. 
+	</p>
+	<p class="text-justify">
+		De maneira similar aos demais gráficos, os filtros e interações estão interligados, de modo que podemos observar as variações em valores por modalidade de aplicação clicando nas barras horizontais deste gráfico.
+		Por exemplo, ao clicar na modalidade "Transferências ao Exterior" podemos analisar,
+		nos gráficos anteriores, um salto adverso de valores destinados ao exterior em 2005 e, principalmente, em 2018, com as maiores parcelas destinadas às unidades orçamentárias <b>Fundo Nacional de Cultura</b> e <b>Administração Direta</b>, respectivamente, mas ambas sob a subfunção <b>Difusão Cultural</b>.  
+	</p>
+	<div id="chart6"></div>
+
+
+	<div id="chart7"><h3>(Apenas uma outra forma de visualizar a série temporal) Montante Empenhado, Liquidado e Pago por ano para a Função Cultura</h3></div>
+
+	<table class="table table-hover" id="table" style="margin-top: 50px;">
+		<thead>
+			<tr class="header">
+				<th>Ano</th>
+				<th>Subfunção</th>
+				<th>Unidade Orçamentária</th>
+				<th>Modalidade de Aplicação</th>
+				<th>Empenhado</th>
+				<th>Liquidado</th>
+				<th>Pago</th>
+			</tr>
+		</thead>
+	</table>
+		
+</div>
+<script type="text/javascript">   
+
+	chart1 = new dc.barChart("#chart1");
+	chart12 = new dc.compositeChart("#chart12");
+	chart13 = new dc.compositeChart("#chart13");
+   	chart2 = new dc.barChart("#chart2");
+	chart3 = new dc.rowChart("#chart3");
+   	chart4 = new dc.barChart("#chart4");
+	chart5 = new dc.rowChart("#chart5");
+	chart6 = new dc.rowChart("#chart6");
+   	chart7 = new dc.lineChart("#chart7");
+	dataTable = dc.dataTable("#table");
+
+	d3.csv("data/dadosSIOPtratados.csv", function(data){
+        var dtgFormat = d3.time.format.utc("%Y");
+		data.forEach(function(d) {
+            d.ano = parseInt(d.Ano);
+			// d.ano_formatado = dtgFormat.parse(d.Ano);
+			// d.ano_formatado = d3.time.year.offset(d.ano_formatado, 1)
+			d.subFuncao = d.Subfunção;
+			d.modalidade = d.Modalidade_de_Aplicação;
+			d.empenhado = parseFloat(d.Empenhado);
+			d.liquidado = parseFloat(d.Liquidado);
+			d.unidadeOrcamentaria = d.Unidade_Orçamentária;
+			d.pago = parseFloat(d.Pago);
+			d.dotInicial = parseFloat(d.Dotação_Inicial);
+			d.dotAtual = parseFloat(d.Dotação_Atual);
+        });
+		
+		var facts = crossfilter(data);
+
+		ano_unidade_dimension = facts.dimension(function(d){return [d.ano, d.unidadeOrcamentaria]}, true);
+		pago_group2 =  ano_unidade_dimension.group();
+
+		ano_dimension = facts.dimension(function(d){return d.ano;});
+		subFuncao_dimension = facts.dimension(function(d){return d.subFuncao;});
+		modalidade_dimension = facts.dimension(function(d){return d.modalidade;});
+		dimension_unidade = facts.dimension(function(d){return d.unidadeOrcamentaria;})
+		
+		dimension = facts.dimension(function(d){return d.ano;});
+		const group = dimension
+            .group()
+                .reduce((p, v) => {
+                    p[v.unidadeOrcamentaria] = (p[v.unidadeOrcamentaria] || 0) + v.pago;
+                    p[v.modalidade] = (p[v.modalidade] || 0) + v.liquidado;
+                    p[v.subFuncao] = (p[v.subFuncao] || 0) + v.liquidado;
+                    return p;
+                }, (p, v) => {
+                    p[v.unidadeOrcamentaria] = (p[v.unidadeOrcamentaria] || 0) - v.pago;
+					p[v.modalidade] = (p[v.modalidade] || 0) - v.liquidado;
+                    p[v.subFuncao] = (p[v.subFuncao] || 0) - v.liquidado;
+                    return p;
+                }, () => ({}));	
+        
+        function sel_stack (i) {
+			return function(d){
+				if(d.value[i] == undefined)
+					d.value[i] = 0;
+				return d.value[i];
+			}
+        }
+		
+		pago_group = ano_dimension.group()
+			.reduceSum(function(d){
+				return d.pago;});
+
+		liquidado_group = ano_dimension.group()
+			.reduceSum(function(d){
+				return d.liquidado;});
+		
+		empenhado_group = ano_dimension.group()
+			.reduceSum(function(d){
+				return d.empenhado;});
+
+		dot_inicial_group = ano_dimension.group()
+			.reduceSum(function(d){
+				return d.dotInicial;});
+		dot_atual_group = ano_dimension.group()
+			.reduceSum(function(d){
+				return d.dotAtual;});
+
+		pago_group_subF = subFuncao_dimension.group()
+			.reduceSum(function(d){
+				return d.pago;});
+
+		pago_group_modalidade = modalidade_dimension.group()
+			.reduceSum(function(d){
+				return d.pago;});
+
+		pago_group_unidade = dimension_unidade.group()
+			.reduceSum(function(d){
+				return d.pago;});
+		
+		// list_of_colors = ['#8dd3c7','#ffffb3','#bebada','#fb8072','#80b1d3','#fdb462','#b3de69','#fccde5','#d9d9d9',]
+		list_of_colors = ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a'];
+		list_of_colorsv2 = ['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f','#e5c494'];
+		
+		cores_por_unidade = d3.scale.ordinal()
+			    .domain(["Administração Direta","Agência Nacional do Cinema",
+						"Fundação Biblioteca Nacional","Fundação Cultural Palmares","Fundação Nacional de Artes",
+						"Fundo Nacional de Cultura","Instituto Brasileiro de Museus","IPHAN","Outros"])
+			    .range(list_of_colors)
+
+		cores_por_subfuncao = d3.scale.ordinal()
+			.domain(["392 - Difusão Cultural","122 - Administração Geral",
+					"391 - Patrimônio Histórico, Artístico e Arqueológico","128 - Formação de Recursos Humanos","331 - Proteção e Benefícios ao Trabalhador",
+					"301 - Atenção Básica","125 - Normatização e Fiscalização"])
+			.range(list_of_colors)	
+			
+		var target = document.getElementById('target')
+		max_width = target.offsetWidth;
+
+		colors = ['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854'];
+		// if(max_width < 800)
+
+
+
+		chart1
+			.width(max_width)
+			.height(500)
+			.dimension(ano_dimension)
+			.alwaysUseRounding(true)        
+			// .x(d3.time.scale().domain([dtgFormat.parse("1999"), maxDate]))
+			// .xUnits(d3.time.years)
+			.legend(dc.legend().x(110).y(40).itemHeight(20).gap(3))
+			.x(d3.scale.ordinal().domain(ano_dimension)) 
+			.xUnits(dc.units.ordinal)
+			.margins({left: 100, top: 40, right: 80, bottom: 100})
+			.elasticY(true)
+			.title(function (d) {
+                return d.key + '[' + this.layer + ']: ' + 'R$  '+ d.value.toLocaleString("pt-BR")+',00';;
+            })
+			.colors(d3.scale.ordinal().range(colors))
+			.renderHorizontalGridLines(true)
+			.renderVerticalGridLines(true)
+			.elasticY(true)
+			.renderType('group')
+			.group(liquidado_group, "Executado")
+			.stack(dot_atual_group, "Orçamento")
+			// .group(pago_group, "Pago")
+			// .stack(liquidado_group, "Liquidado")
+			// .stack(empenhado_group, "Empenhado")
+			// .stack(dot_inicial_group, "Dotação Inicial")
+			// .stack(dot_atual_group, "Dotação Atual")		
+			.on('renderlet', function (chart) {
+				var txt = chart.selectAll('g.x text')
+					.attr('transform', 'translate(-15,10) rotate(-35)')});	
+				
+		chart12
+			.width(max_width)
+			.height(500)
+			.margins({left: 100, top: 40, right: 80, bottom: 100})
+			.legend(dc.legend().x(110).y(40).itemHeight(20).gap(3))
+			.renderHorizontalGridLines(true)
+			.x(d3.scale.linear().domain([2000,2021]))
+			.xUnits(dc.units.integers)
+			.elasticY(true)
+			.brushOn(false)
+			.title(function (d) {
+						dot = dot_atual_group.all().filter(function(item) { return item.key === d.key; })[0].value;
+						value = Math.round((100*d.value)/dot);
+						return d.key + '[' + this.layer + ']: '+ value +'%';;
+					})
+			.compose([
+					
+				dc.lineChart(chart12)
+					// .dimension(ano_dimension)
+					.group(liquidado_group, "Executado")
+					.colors('#fc8d62')
+					.renderDataPoints({radius: 5, fillOpacity: 0.8, strokeOpacity: 0.0})
+					.valueAccessor(function(d) { 
+						dot = dot_atual_group.all().filter(function(item) { return item.key === d.key; })[0].value;
+						return (100*d.value)/dot;
+						return d.value }),					
+							
+			])
+			chart12.xAxis().tickValues([2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+			, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021])
+
+		chart13
+			.width(max_width)
+			.height(500)
+			.margins({left: 100, top: 40, right: 80, bottom: 100})
+			.legend(dc.legend().x(110).y(40).itemHeight(20).gap(3))
+			.renderHorizontalGridLines(true)
+			.x(d3.scale.linear().domain([2000,2021]))
+			.xUnits(dc.units.integers)
+			.elasticY(true)
+			.brushOn(false)
+			.title(function (d) {
+
+				if(d.key == 2000)
+							return 0;
+						else{
+							key_ant = d.key-1;
+							ant = 0;
+							if(this.layer == "Executado")
+								ant = liquidado_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+							else if(this.layer == "Orçamento")
+								ant = empenhado_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+							else 								
+								ant = dot_atual_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+							value =  Math.round((d.value/ant-1)*100);
+							return d.key + '[' + this.layer + ']: '+ value +'%';;
+						}
+					})
+			.compose([
+				// dc.lineChart(chart12)
+				// 	// .dimension(ano_dimension)
+				// 	.group(pago_group, "Pago")
+				// 	.colors('#66c2a5')
+				// 	.renderDataPoints({radius: 5, fillOpacity: 0.8, strokeOpacity: 0.0})
+				// 	.valueAccessor(function(d) { 
+				// 		if(d.key == 2000)
+				// 			return 0;
+				// 		else{
+				// 			key_ant = d.key-1;
+				// 			key_ant = 2000; 
+				// 			ant = pago_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+				// 			return (d.value/ant-1)*100;
+				// 		}
+				// 	}),					
+					
+				dc.lineChart(chart12)
+					// .dimension(ano_dimension)
+					.group(liquidado_group, "Executado")
+					.colors('#fc8d62')
+					.renderDataPoints({radius: 5, fillOpacity: 0.8, strokeOpacity: 0.0})
+					.valueAccessor(function(d) { 
+						if(d.key == 2000)
+							return 0;
+						else{
+							key_ant = d.key-1;
+							// key_ant = 2000; 
+							ant = liquidado_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+							return (d.value/ant-1)*100;
+						}
+					}),
+					
+				dc.lineChart(chart12)
+					.dimension(ano_dimension)
+					.group(empenhado_group, "Empenhado")
+					.colors('#8da0cb')
+					.renderDataPoints({radius: 5, fillOpacity: 0.8, strokeOpacity: 0.0})
+					.valueAccessor(function(d) { 
+						if(d.key == 2000)
+							return 0;
+						else{
+							key_ant = d.key-1;
+							// key_ant = 2000; 
+							ant = empenhado_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+							return (d.value/ant-1)*100;
+						}
+					}),						
+				// dc.lineChart(chart12)
+				// 	.dimension(ano_dimension)
+				// 	.group(dot_inicial_group, "Dotação Inicial")
+				// 	.colors('#e78ac3')
+				// 	.renderDataPoints({radius: 5, fillOpacity: 0.8, strokeOpacity: 0.0})
+				// 	.valueAccessor(function(d) { 
+				// 		if(d.key == 2000)
+				// 			return 0;
+				// 		else{
+				// 			key_ant = d.key-1;
+				// 			ant = dot_inicial_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+				// 			return (d.value/ant-1)*100;
+				// 		}
+				// 	}),	
+				dc.lineChart(chart12)
+					.dimension(ano_dimension)
+					.group(dot_atual_group, "Orçamento")
+					.colors('#a6d854')
+					.renderDataPoints({radius: 5, fillOpacity: 0.8, strokeOpacity: 0.0})
+					.valueAccessor(function(d) { 
+						if(d.key == 2000)
+							return 0;
+						else{
+							key_ant = d.key-1;
+							// key_ant = 2000; 
+							ant = dot_atual_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+							return (d.value/ant-1)*100;
+						}
+					}),	
+			])
+			chart13.xAxis().tickValues([2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010
+			, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021])
+
+		
+		chart2
+            .width(max_width)
+            .height(500)
+			.margins({left: 100, top: 40, right: 230, bottom: 80})
+            .legend(dc.legend().x(max_width-230).y(50).itemHeight(20).gap(5)) 
+            .clipPadding(10)
+			.elasticY(true)
+            .x(d3.scale.ordinal().domain(dimension)) // Need the empty val to offset the first value
+			.xUnits(dc.units.ordinal)
+			.title(function (d) {
+                return d.key + '[' + this.layer + ']: ' + 'R$  '+ d.value[this.layer].toLocaleString("pt-BR")+',00';;
+            })
+			.renderHorizontalGridLines(true)
+			.renderVerticalGridLines(true)
+			.colors(cores_por_unidade)
+			.dimension(dimension)           
+            .group(group, "Administração Direta", sel_stack('Administração Direta'))
+            .stack(group, "Agência Nacional do Cinema", sel_stack('Agência Nacional do Cinema'))
+            .stack(group, "Fundação Biblioteca Nacional", sel_stack('Fundação Biblioteca Nacional'))
+            .stack(group, "Fundação Casa de Rui Barbosa", sel_stack('Fundação Casa de Rui Barbosa'))
+            .stack(group, "Fundação Cultural Palmares", sel_stack('Fundação Cultural Palmares'))
+            .stack(group, "Fundação Nacional de Artes", sel_stack('Fundação Nacional de Artes'))
+            .stack(group, "Fundo Nacional de Cultura", sel_stack('Fundo Nacional de Cultura'))
+			.stack(group, "Instituto Brasileiro de Museus", sel_stack('Instituto Brasileiro de Museus'))
+            .stack(group, "IPHAN", sel_stack('IPHAN'))
+			.stack(group, "Outros", sel_stack('Outros'))
+			.on('renderlet', function (chart) {
+				var txt = chart.selectAll('g.x text')
+					.attr('transform', 'translate(-15,10) rotate(-35)')});								
+	
+			
+		chart3
+			.width(max_width)
+			.height(600)
+			.margins({left: 10, top: 20, right: 80, bottom: 60})
+			.x(d3.scale.linear().domain([0,50000]))
+			.elasticX(true)
+			.title(function(d){
+				return 'R$  '+ d.value.toLocaleString("pt-BR")+',00';
+			})
+
+			.colors(cores_por_unidade)
+			.renderLabel(true)
+			.renderTitleLabel(true)
+			.dimension(dimension_unidade)
+			.group(pago_group_unidade)
+			.rowsCap(10)
+			.ordering(function(d) { return -d.value });
+
+
+		chart4
+			.width(max_width)
+            .height(500)
+			.margins({left: 100, top: 40, right: 230, bottom: 80})
+            .legend(dc.legend().x(max_width-230).y(50).itemHeight(20).gap(5)) 
+            .x(d3.scale.ordinal().domain(dimension))
+			.xUnits(dc.units.ordinal)
+            .clipPadding(10)
+			.elasticY(true)
+            .title(function (d) {
+                return d.key + '[' + this.layer + ']: ' + 'R$  '+ d.value[this.layer].toLocaleString("pt-BR")+',00';;
+            })
+			.renderHorizontalGridLines(true)
+			.renderVerticalGridLines(true)
+			.colors(cores_por_subfuncao)
+			.dimension(dimension)           
+            .group(group, "392 - Difusão Cultural", sel_stack('392 - Difusão Cultural'))
+            .stack(group, "122 - Administração Geral", sel_stack('122 - Administração Geral'))
+            .stack(group, "391 - Patrimônio Histórico, Artístico e Arqueológico", sel_stack('391 - Patrimônio Histórico, Artístico e Arqueológico'))
+            .stack(group, "128 - Formação de Recursos Humanos", sel_stack('128 - Formação de Recursos Humanos'))
+            .stack(group, "331 - Proteção e Benefícios ao Trabalhador", sel_stack('331 - Proteção e Benefícios ao Trabalhador'))
+            .stack(group, "301 - Atenção Básica", sel_stack('301 - Atenção Básica'))
+            .stack(group, "125 - Normatização e Fiscalização", sel_stack('125 - Normatização e Fiscalização'))
+			.on('renderlet', function (chart) {
+				var txt = chart.selectAll('g.x text')
+					.attr('transform', 'translate(-15,10) rotate(-35)')});	
+            
+
+		chart5
+			.width(max_width)
+			.height(600)
+			.margins({left: 10, top: 20, right: 80, bottom: 60})
+			.x(d3.scale.linear().domain([0,50000]))
+			.elasticX(true)
+			.title(function(d){
+				return 'R$  '+ d.value.toLocaleString("pt-BR")+',00';
+			})
+			.colors(cores_por_subfuncao)
+			.renderLabel(true)
+			.renderTitleLabel(true)
+			.dimension(subFuncao_dimension)
+			.group(pago_group_subF)
+			.rowsCap(10)
+			// .labelOffsetX(-200)
+			.ordering(function(d) { return -d.value });
+
+
+		chart6
+			.width(max_width)
+			.height(600)
+			.margins({left: 10, top: 40, right: 80, bottom: 60})
+			.x(d3.scale.linear().domain([0,50000]))
+			.elasticX(true)
+			.title(function(d){
+				return 'R$  '+ d.value.toLocaleString("pt-BR")+',00';
+			})
+			.renderLabel(true)
+			.renderTitleLabel(true)
+			.dimension(modalidade_dimension)
+			.group(pago_group_modalidade)
+			.rowsCap(5)
+			.ordering(function(d) { return -d.value });
+
+		chart7
+			.width(max_width)
+			.height(500)
+			// .x(d3.time.scale().domain([dtgFormat.parse("2000"), dtgFormat.parse("2021")]))
+			// .xUnits(d3.time.years)	
+			.x(d3.scale.ordinal().domain(ano_dimension)) // Need the empty val to offset the first value
+			.xUnits(dc.units.ordinal)
+			.margins({left: 80, top: 10, right: 80, bottom: 60})
+			.elasticY(true)	
+			// .yAxisLabel("The Y Axis")
+			.legend(dc.legend().x(100).y(50).itemHeight(20).gap(5))
+			.renderHorizontalGridLines(true)
+			.brushOn(true)
+			.dimension(ano_dimension)		
+			.group(pago_group, "Pago")		
+			.stack(liquidado_group, "Liquidado")
+			.renderArea(true)
+			.stack(empenhado_group, "Empenhado");
+		
+
+
+		dataTable
+			.width(max_width)
+            .height(800)
+            .dimension(ano_dimension)
+            .group(function(d) {
+                return "Tebalea de dados";
+            })
+            .size(20)
+            .columns([
+                    function(d) { return d.ano; },                    
+                    function (d) { return d.unidadeOrcamentaria; },
+                    function (d) { return d.subFuncao; },
+                    function (d) { return d.modalidade; },
+					function (d) { return d.empenhado; },
+                    function (d) {return d.liquidado; },
+                    function (d) {return d.pago; }					
+					
+				])
+            .sortBy(function(d) { return d.pago; })
+            .order(d3.ascending);
+
+
+		dc.renderAll();
+		
+	});			
+	
+
+</script>
+
+
+ <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+ <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <!-- Latest compiled and minified JavaScript -->
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+</body>
+</html>

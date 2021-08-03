@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Data.doc/OPovo - Para onde foi o orçamento da Cultura nos últimos 20 anos? 	</title>
+	<meta charset="UTF-8"> 
+
+	<script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+   
+	
+	<link rel="stylesheet" href="https://unpkg.com/dc@4/dist/style/dc.css">
+	<script src="js/crossfilter.js" charset="utf-8"></script>
+   <script src="https://unpkg.com/dc@4/dist/dc.js" charset="utf-8"></script>
+
+   <link rel = "stylesheet" href="https://cdn.jsdelivr.net/gh/jaklub/dc.js@grouped-or-stacked-bars-artifacts/dc.css
+	">
+	<script src="https://cdn.jsdelivr.net/gh/jaklub/dc.js@grouped-or-stacked-bars-artifacts/dc.js
+	" charset="utf-8"></script>
+
+   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<link rel="icon" href="https://yt3.ggpht.com/ytc/AAUvwniBqGmJubYSj-rjkhRMVK9svDC9HCDkzmAhL7JqATo=s900-c-k-c0x00ffffff-no-rj">
+
+	<style>
+		/* style="max-width: 1100px; font-size: 14px;" */
+		p{
+			font-family: var(--noto);
+    		font-weight: 400;
+		    font-size: 21px;
+			color: #333;
+			line-height: 32px;
+			margin-top: 0;
+			margin-bottom: 20px;
+			word-break: break-word;
+		}
+		h3{
+			margin-left: 3%;
+			font-weight: bold;
+		}
+		label{
+			margin-left: 3%;
+		}
+		.dc-html-legend{
+			margin-left: 3%;
+		}
+		.dc-legend-item-color{
+			height: 35px;
+			width: 35px;
+		}
+		.dc-legend-item-label{
+			fill: black;
+			font: 16px/18px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+		.dc-chart g.axis text{
+			fill: black;
+			font: 14px/18px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+		
+		.dc-chart g.row text {
+			fill: black;
+			font-family: var(--noto);
+			font-size: 16px;
+			font-weight: bold;
+		}
+		.dc-chart g.dc-legend-item text{
+			fill: black;
+			font: 14px/14px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+
+	</style>
+
+</head>
+<body>
+	<p>
+		A Cultura brasileira sempre teve pouca prioridade desde sua fundação, em 1985, representando menos de 1% do Orçamento da União (OU). No entanto, entre 2013 e 2021, houve uma redução significativa (cerca de 49%) no orçamento da pasta, como podemos observar nesta série histórica.
+	</p>
+
+	<p>
+		O gráfico abaixo apresenta os valores anuais do orçamento da cultura e sua respectiva execução. Você pode selecionar uma ou mais colunas para delimitar o período de tempo que deseja analisar, assim os próximos gráficos serão atualizados <b>automaticamente, com as informações referentes apenas ao período de tempo selecionado</b>. Para limpar as seleções,<a onclick="ResetCharts();">clique aqui</a>.   
+	</p>
+
+
+	<div id="chart1">
+		<h3>Valores totais do Orçamento e sua Execução entre 2000 e 2021</h3>
+	</div>
+	<label>Fonte: Levantamento do Data.doc com base nos dados do Siop</label>
+	<!-- <br>
+
+	<p>
+		Ao analisar a variação dos valores ao longo do tempo, expressa no gráfico abaixo, percebe-se uma estabilização na execução do recurso público entre 2012 e 2018 e, em paralelo, uma diminuição gradativa da dotação orçamentária.
+	</p> -->
+	<!-- <div id="chart2">
+
+		<h4>Variação do Orçamento e sua Execução entre 2000 e 2021</h4>
+	</div>
+	<br> -->
+	<h2><b>E como é gasto o orçamento da Cultura?</b></h2>
+	<p>
+		Observaremos agora a distribuição anual e o ranque de gastos executados por unidade orçamentária.
+		Reforçamos que os gráficos estão livres para você filtrar as informações da maneira que desejar. 
+		Mas oferecemos o seguinte exemplo de análise:
+	</p>
+	<p>
+		Pode-se observar que enquanto o Fundo Nacional de Cultura foi prioridade no segundo governo Lula (<a onclick="govLulaFilter();">selecionando 2007 à 2010 no gráfico 4</a>),
+		 ele caiu para a sétima posição no governo Dilma, quando a administração direta passou a receber a maior parcela de recursos (<a onclick="govDilmaFilter();">2011-2014</a>).
+		Depois de analisar, você pode <a onclick="ResetCharts();">remover</a> a seleção.
+	</p>	
+	<p>
+		<b>Para você fazer outras análises, explicamos como os gráficos funcionam:</b> é possível selecionar uma ou mais unidades de interesse no gráfico abaixo, ou delimitar um período de tempo clicando nas colunas do gráfico seguinte.
+		 As informações em todos os demais gráficos da página serão atualizadas automaticamente.
+	</p>
+
+	<div id="chart3">
+		<h3>Orçamento executado por Unidade Orçamentária</b></h3>
+	</div>
+	<label>Fonte: Levantamento do Data.doc com base nos dados do Siop</label>
+	
+	<br>
+	<div id="chart4">
+		<h3>Distribuição anual do orçamento executado por Unidade Orçamentária</h3>
+		<div id="chart4-legend" class="dc-html-legend-container"></div>
+	</div>	
+	<label>Fonte: Levantamento do Data.doc com base nos dados do Siop</label>
+	
+	<br>
+	<p>
+		Para finalizar, vamos detalhar um pouco mais como é gasto o orçamento. 
+		Os gráficos a seguir apresentam a distribuição dos recursos da Cultura por <b>subfunção</b>. Fique à vontade para explorar os dados.
+	</p>
+	<p>
+		Pode-se observar, por exemplo, que os valores pagos para Proteção e Benefícios ao Trabalhador mudaram de patamar em 2014, quando saltou de 3.2 milhões para 20.5 milhões em orçamento executado (+525%).
+		Para isso, clique na barra horizontal “Proteção e Benefícios ao Trabalhador”. 
+	</p>
+	
+
+	<div id="chart5"><h3>Orçamento executado por Subfunção</b></h3></div>
+	<label>Fonte: Levantamento do Data.doc com base nos dados do Siop</label>
+	
+	<br>
+	<div id="chart6"><h3>Distribuição anual do orçamento executado por Subfunção</h3>
+		<div id="chart6-legend" class="dc-html-legend-container"></div>
+	</div>
+	<label>Fonte: Levantamento do Data.doc com base nos dados do Siop</label>
+	<br>
+
+
+	<h3><b>Metodologia </b></h3>
+	<p>
+		A partir dos dados disponibilizados pelo <a target="_blank" href="https://www1.siop.planejamento.gov.br/QvAJAXZfc/opendoc.htm?document=IAS%2FExecucao_Orcamentaria.qvw&host=QVS%40pqlk04&anonymous=true">Painel do Orçamento</a>, do Sistema Integrado de Planejamento e Orçamento - SIOP, 
+		o Data.doc - Núcleo de Dados do O POVO - analisou os gastos do Governo Federal relacionados à Cultura entre os anos 2000 e 2021. 
+	</p>
+	<p>
+		Por eles, é possível identificar as variações de orçamento e execução de gastos, qual foi o investimento anual para cada órgão e unidade da Cultura e qual a natureza das despesas.
+	</p>
+	<p>
+		Para acessar um arquivo .csv com o conjunto de dados explorado, até o dia 10 de junho de 2021, <a target="_blank" href="data/dadosSIOPtratados.csv">clique aqui</a>.      
+	</p>
+
+<script type="text/javascript">   
+
+	chart1 = new dc.barChart("#chart1");
+	// chart2 = new dc.compositeChart("#chart1");
+	chart3 = new dc.rowChart("#chart3");
+   	chart4 = new dc.barChart("#chart4");
+	chart5 = new dc.rowChart("#chart5");
+   	chart6 = new dc.barChart("#chart6");
+	   
+	var facts, ano_dimension, subFuncao_dimension, unidade_dimension, dimension;
+	var group, executado_group, orcamento_group, executado_porSubfuncao_group, executado_porUnidade_group;
+		
+	list_of_colorsv0 = ['#fc8d62', '#66c2a5'];
+	list_of_colorsv1 = ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a'];
+	list_of_colorsv2 = ['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f','#e5c494','#bdbdbd'];
+
+	list_of_colorsv0 = ['#3a74ba', '#f7941d'];
+	list_of_colorsv1 = ["#74CEE2", "#3A74BA", "#0052A4", "#4F3996", "#8250A0", "#ED1E81", "#D71440","#F7941D","#FDB913","#FFDD00"];
+	list_of_colorsv2 = ["#74CEE2", "#0052A4", "#4F3996", "#8250A0", "#ED1E81", "#D71440","#F7941D","#FFDD00"];
+		
+	cores_por_unidade = d3.scaleOrdinal()
+		.domain(["Administração Direta","Agência Nacional do Cinema",
+			"Fundação Biblioteca Nacional","Fundação Cultural Palmares","Fundação Nacional de Artes",
+			"Fundo Nacional de Cultura","Instituto Brasileiro de Museus","IPHAN","Outros"])
+		.range(list_of_colorsv1)
+
+	cores_por_subfuncao = d3.scaleOrdinal()
+		.domain(["Administração Geral", "Difusão Cultural", "Patrimônio Histórico, Artístico e Arqueológico", "Outros Encargos Especiais", "Proteção e Benefícios ao Trabalhador", "Promoção Comercial", "Lazer"])
+		.range(list_of_colorsv2)	
+		// ["Difusão Cultural","Administração Geral",
+		// 	"Patrimônio Histórico, Artístico e Arqueológico","Formação de Recursos Humanos","Proteção e Benefícios ao Trabalhador",
+		// 	"Atenção Básica","Normatização e Fiscalização"]
+		
+		
+	d3.csv("data/dadosSIOPtratados.csv", function(data){
+        var dtgFormat = d3.utcParse("%Y");
+		data.forEach(function(d) {
+            d.ano = parseInt(d.Ano);
+			d.subFuncao = d.Subfunção.substr(6);
+			d.modalidade = d.Modalidade_de_Aplicação;
+			d.empenhado = parseFloat(d.Empenhado);
+			d.liquidado = parseFloat(d.Liquidado);
+			d.unidadeOrcamentaria = d.Unidade_Orçamentária;
+			d.pago = parseFloat(d.Pago);
+			d.dotInicial = parseFloat(d.Dotação_Inicial);
+			d.dotAtual = parseFloat(d.Dotação_Atual);
+        });
+		
+		facts = crossfilter(data);
+
+
+		ano_dimension = facts.dimension(function(d){return d.ano;});
+		subFuncao_dimension = facts.dimension(function(d){return d.subFuncao;});
+		unidade_dimension = facts.dimension(function(d){return d.unidadeOrcamentaria;})
+		
+		dimension = facts.dimension(function(d){return d.ano;});
+		
+		
+
+		group = dimension.group()
+                .reduce((p, v) => {
+                    p[v.unidadeOrcamentaria] = (p[v.unidadeOrcamentaria] || 0) + v.liquidado;
+                    p[v.modalidade] = (p[v.modalidade] || 0) + v.liquidado;
+                    p[v.subFuncao] = (p[v.subFuncao] || 0) + v.liquidado;
+                    return p;
+                }, (p, v) => {
+                    p[v.unidadeOrcamentaria] = (p[v.unidadeOrcamentaria] || 0) - v.liquidado;
+					p[v.modalidade] = (p[v.modalidade] || 0) - v.liquidado;
+                    p[v.subFuncao] = (p[v.subFuncao] || 0) - v.liquidado;
+                    return p;
+                }, () => ({}));	
+        
+        function sel_stack (i) {
+			return function(d){
+				if(d.value[i] == undefined)
+					d.value[i] = 0;
+				return d.value[i];
+			}
+        }
+
+		executado_group = ano_dimension.group()
+			.reduceSum(function(d){
+				return d.liquidado;});
+		
+		orcamento_group = ano_dimension.group()
+			.reduceSum(function(d){
+				return d.dotAtual;});
+
+		executado_porSubfuncao_group = subFuncao_dimension.group()
+			.reduceSum(function(d){
+				return d.liquidado;});
+
+		executado_porUnidade_group = unidade_dimension.group()
+			.reduceSum(function(d){
+				return d.liquidado;});	
+
+			
+		// var target = document.getElementById('target')
+		// max_width = target.offsetWidth;
+		// var article_div = document.getElementsByClassName("default-article white");
+        // if (article_div[0] != undefined){
+		// 	max_width = article_div[0].offsetWidth;
+		// }else{
+		var max_width = document.body.clientWidth;		
+		// }
+		if(max_width<500)
+			max_width=800; 
+
+		
+		const format = d3.format(".2s");
+			
+		chart1
+			.width(max_width)
+			.height(500)
+			.dimension(ano_dimension)
+			.alwaysUseRounding(true)       
+			.legend(dc.legend().x(110).y(40).itemHeight(20).gap(3))
+			.x(d3.scaleOrdinal().domain(ano_dimension)) 
+			.xUnits(dc.units.ordinal)
+			.margins({left: 80, top: 20, right: 50, bottom: 40})
+			.elasticY(true)
+			.turnOnControls(true)
+			.groupBars(true)
+			// .renderType('group')
+			// .yAxisLabel("Valores em R$ para a Cultura")
+			// .xAxisLabel("Valores para a cultura por Ano")
+			.title(function (d) {
+				if(d.key == 2000)
+					return 'As variações são calculadas a partir de 2001';
+				else{
+					key_ant = d.key-1;
+					key_0 = 2000;
+					variacao = 0;
+					ant = 0;
+					if(this.layer == "Executado"){
+						variacao = executado_group.all().filter(function(item) { return item.key === key_0; })[0].value;
+						ant = executado_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+					}else{
+						variacao = orcamento_group.all().filter(function(item) { return item.key === key_0; })[0].value;
+						ant = orcamento_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+					}								
+					value =  Math.round((d.value/ant-1)*100);
+					variacao =  Math.round((d.value/variacao-1)*100);
+					return ''+ this.layer +' em '+d.key+': '+ 'R$  '+ d.value.toLocaleString("pt-BR")+',00' +'\n'+
+					'- O montante representa '+ variacao +'% do valor em 2000;\n'+
+					'- A variação em relação ao ano anterior foi de  '+ value +'%.';;
+				}})
+			.colors(d3.scaleOrdinal().range(list_of_colorsv0))
+			.renderHorizontalGridLines(true)
+			.renderVerticalGridLines(true)
+			.elasticY(true)
+			// .renderType('group')
+			.group(orcamento_group, "Orçamento")	
+			.stack(executado_group, "Executado")
+            .on('renderlet', function (chart) {
+				var txt = chart.selectAll('g.x text')
+					.attr('transform', 'translate(-15,5) rotate(-25)')});
+		
+		// const f = format(".2s");
+		chart1.xAxis().tickValues([2000,2002, 2004, 2006, 2008, 2010, 2012, 2014, 2016, 2018, 2020])
+		
+		chart1.yAxis()
+	    	.tickFormat(function(d){
+				if(d == 0)
+					return '0'
+	    		return 'R$ ' + format(d)
+				.replace(/G/," bi ")
+				.replace(/M/," mi ")
+				.replace(/k/," mil ");
+		    	// return d.toLocaleString("pt-BR");
+		    });
+		// chart2
+		// 	.width(max_width)
+		// 	.height(500)
+		// 	.margins({left: 50, top: 20, right: 80, bottom: 100})
+		// 	.legend(dc.legend().x(110).y(100).itemHeight(20).gap(3))
+		// 	.renderHorizontalGridLines(true)
+		// 	.x(d3.scale.linear().domain([2000,2021]))
+		// 	.xUnits(dc.units.integers)
+		// 	.elasticY(true)
+		// 	.brushOn(false)
+		// 	.title(function (d) {
+		// 		if(d.key == 2000)
+		// 					return 'As variações são calculadas a partir de 2001';
+		// 				else{
+		// 					key_ant = d.key-1;
+		// 					key_0 = 2000;
+		// 					variacao = 0;
+		// 					ant = 0;
+		// 					if(this.layer == "Executado"){
+		// 						variacao = executado_group.all().filter(function(item) { return item.key === key_0; })[0].value;
+		// 						ant = executado_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+		// 					}else{
+		// 						variacao = orcamento_group.all().filter(function(item) { return item.key === key_0; })[0].value;
+		// 						ant = orcamento_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+		// 					}								
+		// 					value =  Math.round((d.value/ant-1)*100);
+		// 					variacao =  Math.round((d.value/variacao-1)*100);
+		// 					return ''+ this.layer +':\n'+
+		// 					d.key + ' representa '+ variacao +'% do valor de 2000;'+
+		// 					' \nA variação em relação ao ano anterior foi de  '+ value +'%';;
+		// 				}
+		// 			})
+		// 	.compose([
+		// 		dc.lineChart(chart2)
+		// 			.dimension(ano_dimension)
+		// 			.group(orcamento_group, "Orçamento")
+		// 			.colors('#fc8d62')
+		// 			.renderDataPoints({radius: 5, fillOpacity: 0.8, strokeOpacity: 0.0})
+		// 			.valueAccessor(function(d) { 
+		// 				if(d.key == 2000)
+		// 					return 0;
+		// 				else{
+		// 					key_ant = 2000; 
+		// 					ant = orcamento_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+		// 					return (d.value/ant-1)*100;
+		// 				}
+		// 			}),					
+		// 		dc.lineChart(chart2)
+		// 			.group(executado_group, "Executado")
+		// 			.colors('#66c2a5')
+		// 			.renderDataPoints({radius: 5, fillOpacity: 0.8, strokeOpacity: 0.0})
+		// 			.valueAccessor(function(d) { 
+		// 				if(d.key == 2000)
+		// 					return 0;
+		// 				else{
+		// 					// key_ant = d.key-1;
+		// 					key_ant = 2000; 
+		// 					ant = executado_group.all().filter(function(item) { return item.key === key_ant; })[0].value;
+		// 					return (d.value/ant-1)*100;
+		// 				}
+		// 			}),				
+		// 	])
+		// 	.on('renderlet', function (chart) {
+		// 		var txt = chart.selectAll('g.x text')
+		// 			.attr('transform', 'translate(-15,10) rotate(-35)')});	
+
+		chart3
+			.width(max_width)
+			.height(500)
+			.margins({left: 10, top: 20, right: 80, bottom: 60})
+			// .x(d3.scaleLinear().domain([0,50000])).ticks(4)
+			.elasticX(true)
+			.title(function(d){
+				return 'R$ ' + format(d.value)
+				.replace(/G/," bi ")
+				.replace(/M/," mi ")
+				.replace(/k/," mil ");
+				// return 'R$  '+ d.value.toLocaleString("pt-BR")+',00';
+			})
+
+			.colors(cores_por_unidade)
+			.renderLabel(true)
+			.renderTitleLabel(true)
+			.dimension(unidade_dimension)
+			.group(executado_porUnidade_group)
+			.rowsCap(10)
+			.ordering(function(d) { return -d.value })
+			.xAxis().ticks(5);
+
+			chart3.xAxis()
+	    	.tickFormat(function(d){
+				if(d == 0)
+					return '0'
+	    		return 'R$ ' + format(d)
+				.replace(/G/," bi ")
+				.replace(/M/," mi ")
+				.replace(/k/," mil ");
+		    	// return d.toLocaleString("pt-BR");
+		    });
+
+		chart4
+            .width(max_width)
+            .height(500)
+			.margins({left: 100, top: 20, right: 80, bottom: 80})
+            // .legend(dc.legend().x(max_width-300).y(50).itemHeight(20).gap(5)) 
+            .legend(new dc.htmlLegend().container('#chart4-legend').horizontal(true).highlightSelected(true))
+			.clipPadding(10)
+			.elasticY(true)
+            .x(d3.scaleOrdinal().domain(dimension))
+			.xUnits(dc.units.ordinal)
+			.title(function (d) {
+                return d.key + '[' + this.layer + ']: ' + 'R$  '+ d.value[this.layer].toLocaleString("pt-BR")+',00';;
+            })
+			.renderHorizontalGridLines(true)
+			.renderVerticalGridLines(true)
+			.colors(cores_por_unidade)
+			.dimension(dimension)  
+			.group(group, "IPHAN", sel_stack('IPHAN'))
+			.stack(group, "Administração Direta", sel_stack('Administração Direta'))
+            .stack(group, "Fundo Nacional de Cultura", sel_stack('Fundo Nacional de Cultura'))
+			.stack(group, "Agência Nacional do Cinema", sel_stack('Agência Nacional do Cinema'))
+            .stack(group, "Instituto Brasileiro de Museus", sel_stack('Instituto Brasileiro de Museus'))
+            .stack(group, "Fundação Nacional de Artes", sel_stack('Fundação Nacional de Artes'))
+            .stack(group, "Fundação Biblioteca Nacional", sel_stack('Fundação Biblioteca Nacional'))
+            .stack(group, "Fundação Casa de Rui Barbosa", sel_stack('Fundação Casa de Rui Barbosa'))
+            .stack(group, "Fundação Cultural Palmares", sel_stack('Fundação Cultural Palmares'))
+            .stack(group, "Outros", sel_stack('Outros'))
+            .on('renderlet', function (chart) {
+				var txt = chart.selectAll('g.x text')
+					.attr('transform', 'translate(-15,5) rotate(-25)')});		
+					
+					
+		chart4.xAxis().tickValues([2000,2002, 2004, 2006, 2008, 2010, 2012, 2014, 2016, 2018, 2020])
+
+		chart4.yAxis()
+	    	.tickFormat(function(d){
+				if(d == 0)
+					return '0'
+	    		return 'R$ ' + format(d)
+				.replace(/G/," bi ")
+				.replace(/M/," mi ")
+				.replace(/k/," mil ");
+		    	// return d.toLocaleString("pt-BR");
+		    });
+		chart5
+			.width(max_width)
+			.height(450)
+			.margins({left: 10, top: 20, right: 80, bottom: 60})
+			.x(d3.scaleLinear().domain([0,50000]))
+			.elasticX(true)
+			.title(function(d){
+				return 'R$ ' + format(d.value)
+				.replace(/G/," bi ")
+				.replace(/M/," mi ")
+				.replace(/k/," mil ");
+				// return 'R$  '+ d.value.toLocaleString("pt-BR")+',00';
+			})
+			.colors(cores_por_subfuncao)
+			.renderLabel(true)
+			.renderTitleLabel(true)
+			.dimension(subFuncao_dimension)
+			.group(executado_porSubfuncao_group)
+			.rowsCap(7)
+			.ordering(function(d) { return -d.value })
+			.xAxis().ticks(5);	
+		
+		chart5.xAxis()
+	    	.tickFormat(function(d){
+				if(d == 0)
+					return '0'
+	    		return 'R$ ' + format(d)
+				.replace(/G/," bi ")
+				.replace(/M/," mi ")
+				.replace(/k/," mil ");
+		    	// return d.toLocaleString("pt-BR");
+		    });
+
+		chart6
+			.width(max_width)
+            .height(500)
+			.margins({left: 100, top: 20, right: 80, bottom: 80})
+			// .legend(dc.htmlLegend().container('#name-legend').horizontal(true).highlightSelected(true))
+            // .horizontal(true)
+			.legend(new dc.htmlLegend().container('#chart6-legend').horizontal(true).highlightSelected(true))
+			
+			// .legend(dc.legend().x(max_width-300).y(50).itemHeight(20).gap(5)) 
+            .x(d3.scaleOrdinal().domain(dimension))
+			.xUnits(dc.units.ordinal)
+            .clipPadding(10)
+			.elasticY(true)
+            .title(function (d) {
+                return d.key + '[' + this.layer + ']: ' + 'R$  '+ d.value[this.layer].toLocaleString("pt-BR")+',00';;
+            })
+			.renderHorizontalGridLines(true)
+			.renderVerticalGridLines(true)
+			.colors(cores_por_subfuncao)
+			.dimension(dimension)
+            .group(group, 'Administração Geral', sel_stack('Administração Geral'))
+			.stack(group, "Difusão Cultural", sel_stack('Difusão Cultural'))
+            .stack(group, "Patrimônio Histórico, Artístico e Arqueológico", sel_stack('Patrimônio Histórico, Artístico e Arqueológico'))
+            .stack(group, "Outros Encargos Especiais", sel_stack('Outros Encargos Especiais'))
+            .stack(group, "Promoção Comercial", sel_stack('Promoção Comercial'))
+            .stack(group, "Proteção e Benefícios ao Trabalhador", sel_stack('Proteção e Benefícios ao Trabalhador'))
+			.stack(group, "Lazer", sel_stack('Lazer'))
+            .on('renderlet', function (chart) {
+				var txt = chart.selectAll('g.x text')
+					.attr('transform', 'translate(-15,5) rotate(-25)')});	
+				
+		chart6.xAxis().tickValues([2000,2002, 2004, 2006, 2008, 2010, 2012, 2014, 2016, 2018, 2020])
+
+		chart6.yAxis()
+	    	.tickFormat(function(d){
+	    		if(d == 0)
+					return '0'
+	    		return 'R$ ' + format(d)
+				.replace(/G/," bi ")
+				.replace(/M/," mi ")
+				.replace(/k/," mil ");
+		    });
+
+
+		dc.renderAll();
+		
+	});			
+	
+	function ResetCharts(){
+		chart1.filterAll();
+		// chart2.filterAll();
+		chart3.filterAll();
+		chart4.filterAll();
+		chart5.filterAll();
+		chart6.filterAll();
+		dc.renderAll();
+	}
+
+	function govLulaFilter(){		
+		// ano_dimension.filterFunction(function(d){
+		// 	return (d > 2006 && d < 2011);			
+		// });
+		// dc.renderAll();
+		ResetCharts();
+		chart4.filter([[2007,2008,2009,2010]]);
+		dc.renderAll();
+	}
+
+	function govDilmaFilter(){	
+		ResetCharts();
+		chart4.filter([[2011,2012,2013,2014]]);
+		dc.renderAll();
+	}
+
+</script>
+
+
+ <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+ <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <!-- Latest compiled and minified JavaScript -->
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+</body>
+</html>
