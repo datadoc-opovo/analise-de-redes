@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Data.doc/OPovo - Monitorando as #3J e #3JForaBolsonaro </title>
+	<meta charset="UTF-8"> 
+	<link rel="stylesheet" href="css/dc.css">
+	<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+   <script src="js/crossfilter.js" charset="utf-8"></script>
+   <script src="js/dc.js" charset="utf-8"></script>
+ 
+	<!-- <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script> -->
+   
+	<!-- 
+	<link rel="stylesheet" href="https://unpkg.com/dc@4/dist/style/dc.css">
+	<script src="js/crossfilter.js" charset="utf-8"></script>
+   <script src="https://unpkg.com/dc@4/dist/dc.js" charset="utf-8"></script>
+
+   <link rel = "stylesheet" href="https://cdn.jsdelivr.net/gh/jaklub/dc.js@grouped-or-stacked-bars-artifacts/dc.css
+	">
+	<script src="https://cdn.jsdelivr.net/gh/jaklub/dc.js@grouped-or-stacked-bars-artifacts/dc.js
+	" charset="utf-8"></script> -->
+
+   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<link rel="icon" href="https://yt3.ggpht.com/ytc/AAUvwniBqGmJubYSj-rjkhRMVK9svDC9HCDkzmAhL7JqATo=s900-c-k-c0x00ffffff-no-rj">
+
+	<style>
+		/* style="zmax-width: 1100px; font-size: 14px;" */
+		p{
+			font-family: var(--noto);
+    		font-weight: 400;
+		    font-size: 21px;
+			color: #333;
+			line-height: 32px;
+			margin-top: 0;
+			margin-bottom: 20px;
+			word-break: break-word;
+		}
+		h3{
+			margin-left: 5%;
+			font-weight: bold;
+		}
+		label{
+			margin-left: 3%;
+		}
+		.dc-html-legend{
+			margin-left: 3%;
+		}
+		.dc-legend-item-color{
+			height: 35px;
+			width: 35px;
+		}
+		.dc-legend-item-label{
+			fill: black;
+			font: 16px/18px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+		.dc-chart g.axis text{
+			fill: black;
+			font: 14px/18px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+		
+		.dc-chart g.row text {
+			fill: black;
+			font-family: var(--noto);
+			font-size: 16px;
+			font-weight: bold;
+		}
+		.dc-chart g.dc-legend-item text{
+			fill: black;
+			font: 14px/14px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+
+	</style>
+
+</head>
+<body>
+	<div class="container">
+		<!-- <h1>Em dia de atos pelo Brasil, manifestações pelo voto impresso somaram 1.8 milhão em interações no Twitter.
+			Entretanto, dados representam 70% da movimentação gerada nos atos contra o governo em 3 de Junho</h1>
+		<p>O dataDoc recuperou tweets relacionados às hashtags <b>#brasilpelovotoauditavel</b> e <b>#VotoImpressoAuditavelJa</b> na última semana via <i>web scraping</i>, com a <i>Twint</i>. Confira:</p> -->
+	<hr>
+    <div id="chart1"><h3>Engajamento no Twitter das hashtags #CpiDaCovid e #CPIdoTSE</h3></div>
+
+    </div>
+    <label style="min-width: 500px; margin-left: 25%;">Fonte: Levantamento do Data.doc com base nos dados do Twitter, via <i>web-scrap</i> com a <i>Twint</i></label>
+<script type="text/javascript">   
+	colors = d3.scale.ordinal()
+    .range(["#2b8cbe",  "#fdae6b"])
+	
+    chart1 = new dc.barChart("#chart1");
+	d3.csv("data/comp.csv", function(data){
+
+		data.forEach(function(d) {
+
+            d.dia = d.Dia;
+            d.ato1 = parseFloat(d.COVID);
+            d.ato2 = +d.TSE;
+
+            console.log(d);
+        });
+		facts = crossfilter(data);
+
+		diaDimention = facts.dimension(function(d){return d.dia;});
+        ato1G = diaDimention.group()
+			.reduceSum(function(d){
+				return d.ato1;
+			});
+        ato2G = diaDimention.group()
+			.reduceSum(function(d){
+				return d.ato2;
+			});
+
+            chart1
+			.width(1200)
+			.height(500)
+			.dimension(diaDimention)
+			.alwaysUseRounding(true)       
+			.legend(dc.legend().x(110).y(40).itemHeight(20).gap(3))
+			.x(d3.scale.ordinal().domain(diaDimention)) 
+			.xUnits(dc.units.ordinal)
+			.margins({left: 80, top: 20, right: 80, bottom: 40})
+			.elasticY(true)
+			.renderHorizontalGridLines(true)
+			.renderVerticalGridLines(true)
+			.elasticY(true)
+            .xAxisLabel("Dias de Mobilização")
+			.renderType('group')
+			.colors(colors)
+			.group(ato1G, "#CPIdaCovid")	
+			.stack(ato2G, "#CPIdoTSE")
+
+            var format = d3.format("s");
+		    chart1.yAxis()
+	    	.tickFormat(function(d){
+	    		return '' + format(d)
+				.replace(/G/," Bi ")
+				.replace(/M/," Mi ")
+				.replace(/k/," mil ");
+		    	// return d.toLocaleString("pt-BR");
+		    });
+
+            chart1.xAxis()
+	    	.tickFormat(function(d){
+                console.log(d);
+	    		return 'Dia ' + d
+				
+		    });
+
+
+        dc.renderAll()
+    });
+
+</script>
+
+
+ <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+ <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <!-- Latest compiled and minified JavaScript -->
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Data.doc/OPovo - Visualização de consumo intero	</title>
+	<meta charset="UTF-8"> 
+	<link rel="stylesheet" href="css/dc.css">
+	<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+   <script src="js/crossfilter.js" charset="utf-8"></script>
+   <script src="js/dc.js" charset="utf-8"></script>
+
+   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<link rel="icon" href="https://yt3.ggpht.com/ytc/AAUvwniBqGmJubYSj-rjkhRMVK9svDC9HCDkzmAhL7JqATo=s900-c-k-c0x00ffffff-no-rj">
+
+	<style>
+		/* style="max-width: 1100px; font-size: 14px;" */
+		p{
+			font-family: var(--noto);
+    		font-weight: 400;
+		    font-size: 21px;
+			color: #333;
+			line-height: 32px;
+			margin-top: 0;
+			margin-bottom: 20px;
+			word-break: break-word;
+		}
+		h3{
+			margin-left: 3%;
+			font-weight: bold;
+		}
+		
+		.dc-chart g.axis text{
+			fill: black;
+			font: 14px/18px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+		
+		.dc-chart g.row text {
+			fill: black;
+			font-family: var(--noto);
+			font-size: 16px;
+			font-weight: bold;
+		}
+		.dc-chart g.dc-legend-item text{
+			fill: black;
+			font: 14px/14px Arial, Helvetica, sans-serif;
+			font-weight: bold;
+		}
+
+	</style>
+
+</head>
+<body>
+	<h3>Visualização para consumo interno: Trabalho Armando</h3>
+	<div id="chart1">
+		
+	</div>
+	<div id="chart2">
+	</div>
+	
+	
+	<label>Fonte: Levantamento do Data.doc com base nos dados o portal OPovo</label>
+
+
+<script type="text/javascript">   
+
+	chart1 = new dc.barChart("#chart1");
+	chart2 = new dc.rowChart("#chart2");
+	   
+	var facts, ano_dimension;
+	var executado_group, orcamento_group;
+
+	list_of_colorsv0 = ['#e6ab02', '#5e3c99'];
+
+		
+	d3.csv("data/arm.csv", function(data){
+        var dtgFormat = d3.time.format.utc("%m/%d/%Y");
+		data.forEach(function(d) {
+            d.dtg = dtgFormat.parse(d.data);
+			console.log(d.dtg)
+
+			d.status = d.status;
+        });
+		
+		facts = crossfilter(data);
+		// dimension = facts.dimension(function(d){return d.data;});
+
+        dimension = facts.dimension(d => d3.time.day(d.dtg))
+
+		dimension2 = facts.dimension(d => d.status)
+
+		
+		status_group = dimension.group();
+		status_group2 = dimension2.group();
+
+
+		chart1
+			.width(650)
+			.height(450)
+			.dimension(dimension)
+			.alwaysUseRounding(true)       
+			.legend(dc.legend().x(110).y(40).itemHeight(20).gap(3))
+			.x(d3.scale.ordinal().domain(dimension)) 
+			.xUnits(dc.units.ordinal)
+			.margins({left: 80, top: 20, right: 80, bottom: 40})
+			.elasticY(true)
+			.colors(d3.scale.ordinal().range(list_of_colorsv0))
+			.renderHorizontalGridLines(true)
+			.renderVerticalGridLines(true)
+			.elasticY(true)
+			.group(status_group, "Número de Matérias")
+			format = d3.time.format("%d/%m")	
+			
+			chart1.xAxis()
+			.tickFormat(function (d) {
+				return format(d);
+			});
+			
+
+			chart2
+			.margins({top: 10, right: 30, bottom: 100, left:20})
+    	    .height(350)
+            .width(400)
+    	    .dimension(dimension2)
+    	    .group(status_group2)
+			.renderLabel(false)
+			.renderTitleLabel(true)
+    	    .cap(10)
+			.othersGrouper(false)
+    	    .ordering(function(d){return -d.value;})
+    	    .xAxis().ticks(3);
+			
+
+		dc.renderAll();
+		
+	});			
+	
+
+</script>
+
+
+ <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+ <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <!-- Latest compiled and minified JavaScript -->
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+</body>
+</html>
